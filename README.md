@@ -4,15 +4,16 @@ This repo contains analytics transformation scripts for TocaBoca, done through d
 ### Repo structure
 ```text
 tocaboca/
-├── ingestion/                 # Databricks ingestion scripts
-│   ├── includes/              # Shared configuration (paths, schema, constants)
-│   │   └── infra/             # One-off mounting scripts
+├── ingestion/                     # Databricks ingestion scripts
+│   ├── includes/                  # Shared configuration & infra setup
+│   │   ├── configuration.py       # Global configs (paths, schemas, constants)
+│   │   └── infra/                 # One-off mounting scripts
 │   │       └── mount_files_to_abfs_setup.py
 │   ├── ingest_events.py
 │   ├── ingest_products.py
 │   └── ingest_exchange_rates.py
-├── dbt/                       # dbt project for transformations
-│   ├── models/              
+├── dbt/                           # dbt project for transformations
+│   ├── models/                   
 │   │   ├── bronze/
 │   │   │   └── _source.yml
 │   │   ├── silver/
