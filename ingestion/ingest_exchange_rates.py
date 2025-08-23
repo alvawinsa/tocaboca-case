@@ -14,11 +14,11 @@ table = pq.read_table(f"/dbfs/{FOLDER_PATH}/exchange_rates")
 
 # COMMAND ----------
 
-# Spark can't handle more than decimal with precision of 38, so we first need to read it using pyarrow, then convert the usd_per_currency to a string 
+# Spark can't handle more than decimal with precision of 38, so we first need to read it using pyarrow, then convert the usd_per_currency to a string
 table = table.set_column(
     table.schema.get_field_index("usd_per_currency"),
     "usd_per_currency",
-    table["usd_per_currency"].cast(pa.string())
+    table["usd_per_currency"].cast(pa.string()),
 )
 
 # COMMAND ----------
@@ -52,4 +52,5 @@ final_df.write \
     .format("delta") \
     .mode("overwrite") \
     .saveAsTable(f"{BRONZE_SCHEMA}.{EXCHANGE_TABLE}")
+    
 print("Exhange rates ingestion completed.")
