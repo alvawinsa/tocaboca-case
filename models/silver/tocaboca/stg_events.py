@@ -2,7 +2,7 @@ def model(dbt, session):
 
     from pyspark.sql import functions as F
 
-    # Assign 'dev' in dev and build stage. Assign 'prod' for merge in production:
+    # Toggle env for dev vs prod
     environment = "dev"
 
     if environment == "dev":
@@ -31,7 +31,7 @@ def model(dbt, session):
     else:
         raise Exception("No spark environment defined")
 
-    # Load from bronze
+    # Read from bronze source
     bronze_df = dbt.source("tocaboca","events")
 
     # Flatten event_params (array of key/value structs) into columns
@@ -44,7 +44,7 @@ def model(dbt, session):
         .withColumn("param_value_double", F.col("param.value.double_value"))
     )
 
-    # Pivot params back into columns
+    # Pivot params back into columns based on unique combination of columns
     pivoted_df = (
         flattened_df
         .withColumn(
@@ -69,7 +69,7 @@ def model(dbt, session):
         .agg(F.first("param_value"))
     )
 
-    # Cast fields to useful types
+    # Cast columns into correct data types and drop duplicates
     final_df = (
         pivoted_df
         .withColumn("event_timestamp", (F.col("event_timestamp")/1e6).cast("timestamp"))
