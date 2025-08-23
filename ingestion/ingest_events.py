@@ -1,6 +1,5 @@
 # Databricks notebook source
-# Very sparse at the moment, but run some global configs
-%run /Users/winsa.alva@gmail.com/tocaboca-case/ingestion/configuration
+# MAGIC %run /Users/winsa.alva@gmail.com/tocaboca-case/ingestion/includes/configuration
 
 # COMMAND ----------
 
@@ -12,7 +11,8 @@ from pyspark.sql.functions import current_timestamp
 events_df = spark.read \
     .option("header", True) \
     .option("inferSchema", "true") \
-    .parquet(f"{folder_path}/events")
+    .parquet(f"{FOLDER_PATH}/events")
+print(f"Read {events_df.count()} records from {FOLDER_PATH}/events")
 
 # COMMAND ----------
 
@@ -21,10 +21,11 @@ final_df = events_df.withColumn("ingested_at", current_timestamp())
 
 # COMMAND ----------
 
-spark.sql("CREATE SCHEMA IF NOT EXISTS prod_bronze.tocaboca")
+spark.sql(f"CREATE SCHEMA IF NOT EXISTS {BRONZE_SCHEMA}")
 
 # Write data frame as a delta table to unity catalog
 final_df.write \
     .format("delta") \
     .mode("overwrite") \
-    .saveAsTable("prod_bronze.tocaboca.events")
+    .saveAsTable(f"{BRONZE_SCHEMA}.{EVENTS_TABLE}")
+print("Events ingestion completed.")

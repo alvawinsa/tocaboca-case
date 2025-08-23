@@ -1,6 +1,5 @@
 # Databricks notebook source
-# Very sparse at the moment, but run some global configs
-%run /Users/winsa.alva@gmail.com/tocaboca-case/ingestion/configuration
+# MAGIC %run /Users/winsa.alva@gmail.com/tocaboca-case/ingestion/includes/configuration
 
 # COMMAND ----------
 
@@ -11,7 +10,7 @@ import pyarrow as pa
 # COMMAND ----------
 
 # Since we're using pyarrow, need to read from dbfs
-table = pq.read_table(f"/dbfs/{folder_path}/exchange_rates")
+table = pq.read_table(f"/dbfs/{FOLDER_PATH}/exchange_rates")
 
 # COMMAND ----------
 
@@ -26,12 +25,12 @@ table = table.set_column(
 
 pq.write_table(
     table,
-    "/dbfs/mnt/analyticsaw/tocaboca/exchange_rates_fixed"
+    f"/dbfs/{FOLDER_PATH}/exchange_rates_fixed"
 )
 
 # COMMAND ----------
 
-converted_df = spark.read.parquet("/mnt/analyticsaw/tocaboca/exchange_rates_fixed")
+converted_df = spark.read.parquet(f"{FOLDER_PATH}/exchange_rates_fixed")
 
 # COMMAND ----------
 
@@ -40,10 +39,11 @@ final_df = converted_df.withColumn("ingested_at", current_timestamp())
 
 # COMMAND ----------
 
-spark.sql("CREATE SCHEMA IF NOT EXISTS prod_bronze.tocaboca")
+spark.sql(f"CREATE SCHEMA IF NOT EXISTS {BRONZE_SCHEMA}")
 
 # Save the data frame as a delta table in unity catalog
 final_df.write \
     .format("delta") \
     .mode("overwrite") \
-    .saveAsTable("prod_bronze.tocaboca.exchange_rates")
+    .saveAsTable(f"{BRONZE_SCHEMA}.{EXCHANGE_TABLE}")
+print("Exhange rates ingestion completed.")
