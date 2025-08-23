@@ -8,10 +8,11 @@ from pyspark.sql.functions import current_timestamp
 # COMMAND ----------
 
 # Use spark read to parse the parquet file, inferring the schema
-products_df = spark.read \
-    .option("header", True) \
-    .option("inferSchema", "true") \
+products_df = (
+    spark.read.option("header", True)
+    .option("inferSchema", "true")
     .parquet(f"{FOLDER_PATH}/products")
+)
 
 # Check that there's any data
 if products_df.count() == 0:
@@ -32,4 +33,5 @@ final_df.write \
     .format("delta") \
     .mode("overwrite") \
     .saveAsTable(f"{BRONZE_SCHEMA}.{PRODUCTS_TABLE}")
+    
 print("Products ingestion completed.")
