@@ -1,15 +1,19 @@
-Welcome to your new dbt project!
+### Overview
+This repo contains analytics transformation scripts for TocaBoca, done through dbt. It also at the moment contains Databricks ingestion scripts for the raw data, which should live in another repo, but for ease of use for this case they were merged.
 
-### Using the starter project
+## Repo structure
 
-Try running the following commands:
-- dbt run
-- dbt test
+tocaboca/
+├── ingestion/           # Databricks ingestion scripts
+│   ├── includes/        # Shared configuration (paths, schema, constants)
+│        │── infra       # One off mounting scripts
+│            │── mount_files_to_abfs_setup
+│   ├── ingest_events.py
+│   ├── ingest_products.py
+│   └── ingest_exchange_rates.py
+├── dbt/                 # dbt project for transformations
+│   ├── models/          
+│   ├── seeds/
+│   └── sources.yml
+├── README.md
 
-
-### Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [dbt community](https://getdbt.com/community) to learn from other analytics engineers
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
