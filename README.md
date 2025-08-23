@@ -1,7 +1,7 @@
-### Overview
+## Overview
 This repo contains analytics transformation scripts for TocaBoca, done through dbt. It also at the moment contains Databricks ingestion scripts for the raw data, which should live in another repo, but for ease of use for this case they were merged.
 
-## Repo structure
+### Repo structure
 ```text
 tocaboca/
 ├── ingestion/                 # Databricks ingestion scripts
