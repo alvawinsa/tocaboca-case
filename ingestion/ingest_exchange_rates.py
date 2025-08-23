@@ -23,6 +23,7 @@ table = table.set_column(
 
 # COMMAND ----------
 
+# Write back the converted table
 pq.write_table(
     table,
     f"/dbfs/{FOLDER_PATH}/exchange_rates_fixed"
@@ -30,7 +31,12 @@ pq.write_table(
 
 # COMMAND ----------
 
+# Load it back into spark
 converted_df = spark.read.parquet(f"{FOLDER_PATH}/exchange_rates_fixed")
+
+# Check there's any data
+if converted_df.limit(1).count() == 0:
+    raise ValueError("Exchange_rates table is empty")
 
 # COMMAND ----------
 

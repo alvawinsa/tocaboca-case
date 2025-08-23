@@ -12,6 +12,11 @@ events_df = spark.read \
     .option("header", True) \
     .option("inferSchema", "true") \
     .parquet(f"{FOLDER_PATH}/events")
+
+# Check that there's any data
+if events_df.count() == 0:
+    raise ValueError("No data found in source!")
+
 print(f"Read {events_df.count()} records from {FOLDER_PATH}/events")
 
 # COMMAND ----------

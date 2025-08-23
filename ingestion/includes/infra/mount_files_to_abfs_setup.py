@@ -26,3 +26,4 @@ def mount_adls(storage_account_name, container_name):
 # COMMAND ----------
 
 mount_adls(STORAGE_ACCOUNT_NAME, CONTAINER_NAME)
+print("Containers have been mounted")
