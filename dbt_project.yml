@@ -28,3 +28,7 @@ models:
       +meta:
         owner: "Data team"
       +materialized: table
+      +catalog: |
+        {%- if target.name == "prod" -%} prod_silver
+        {%- else -%} sandbox
+        {%- endif -%}

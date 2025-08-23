@@ -1,0 +1,3 @@
+models:
+  - name: stg_events
+    description: a staging model, flattening out the complex structs of the raw file.
