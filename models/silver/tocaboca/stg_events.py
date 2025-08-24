@@ -83,13 +83,17 @@ def model(dbt, session):
         .withColumn("value", F.col("value").cast("double") / 1e6)
         .withColumn("quantity", F.col("quantity").cast("int"))
         .withColumn("count", F.col("count").cast("int"))
-        .withColumn("engaged_session_event", (F.col("engaged_session_event") == "1").cast("boolean"))
-        .withColumn("firebase_conversion", (F.col("firebase_conversion") == "1").cast("boolean"))
+        .withColumn("engaged_session_event", (F.col("engaged_session_event") == "1").cast("boolean").alias("is_engaged_session_event"))
+        .withColumn("firebase_conversion", (F.col("firebase_conversion") == "1").cast("boolean").alias("is_conversion_event"))
         .withColumn("ga_session_id", F.col("ga_session_id").cast("long"))
-        .withColumn("session_engaged", (F.col("session_engaged") == "1").cast("boolean"))
-        .withColumn("subscription", (F.col("subscription") == "1").cast("boolean"))
+        .withColumn("session_engaged", (F.col("session_engaged") == "1").cast("boolean").alias("is_session_engaged"))
+        .withColumn("subscription", (F.col("subscription") == "1").cast("boolean").alias("has_subscription"))
         .withColumn("validated", (F.col("validated") == "1").cast("boolean"))
         .withColumnRenamed("currency", "currency_code")
+        .withColumnRenamed("firebase_event_origin", "event_origin")
+        .withColumnRenamed("firebase_screen_class", "screen_class")
+        .withColumnRenamed("firebase_screen_id", "screen_id")
+        .withColumnRenamed("validated", "is_validated")
         .withColumn(
             "event_key",
             F.md5(

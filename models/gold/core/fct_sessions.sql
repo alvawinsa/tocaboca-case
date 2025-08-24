@@ -14,8 +14,8 @@ with final as (
         max(case when event_name = 'app_crashed' then true else false end) as has_app_crashed,
         max(case when event_name = 'store_entry' then true else false end) as has_entered_store,
         max(case when event_name = 'in_app_purchased' then true else false end) as has_in_app_purchased,
-        max(case when session_engaged = true then true else false end) as is_session_engaged,
-        max(case when subscription = true then true else false end) as has_subscription
+        max(case when is_session_engaged = true then true else false end) as is_session_engaged,
+        max(case when has_subscription = true then true else false end) as has_subscription
     from events
     group by all
     )

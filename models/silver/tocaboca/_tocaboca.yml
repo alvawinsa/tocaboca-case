@@ -43,23 +43,23 @@ models:
       - name: currency_code
         description: Currency code for the purchase events
         data_type: string
-      - name: engaged_session_event
+      - name: is_engaged_session_event
         description: If an event deemed as engaging has happened, e.g. viewing certain screen.
         data_type: boolean
-      - name: firebase_conversion
+      - name: is_conversion_event
         description: >
           Boolean flag if the event is marked as a Firebase conversion. This is
           when an event tied to an important business outcome happens, e.g. a purchase
           or a signup.
         data_type: boolean
-      - name: firebase_event_origin
+      - name: event_origin
         description: >
           Origin of event: app, or auto
         data_type: string
-      - name: firebase_screen_class
+      - name: screen_class
         description: Screen class name where the event occurred.
         data_type: string
-      - name: firebase_screen_id
+      - name: screen_id
         description: Unique identifier for the screen within Firebase context.
         data_type: string
       - name: ga_dedupe_id
@@ -92,7 +92,7 @@ models:
       - name: reason
         description: Reason stored for event, context, e.g. as to why app crashed
         data_type: string
-      - name: session_engaged
+      - name: is_session_engaged
         description: >
           Boolean flag if the session was considered engaged. GA4 considers it engaged
           if any of the following is met
@@ -100,10 +100,10 @@ models:
             - session included one or more events considered conversion events
             - user viewed 2 or more pages during session
         data_type: boolean
-      - name: subscription
+      - name: has_subscription
         description: I'm assuming boolean flag for if the session is attributed to a subscription.
         data_type: boolean
-      - name: validated
+      - name: is_validated
         description: Boolean flag indicating if the event has been validated, assume by GA4
         data_type: boolean
       - name: value
