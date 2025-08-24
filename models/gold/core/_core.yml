@@ -106,3 +106,22 @@ models:
       - name: has_subscription
         description: Whether the device has an active subscription. Not sure this is really what it is.
         data_type: boolean
+
+  - name: fct_purchases
+    description: one row per in-app purchase event, with price converted to USD
+    columns:
+      - name: purchased_at_local
+        description: Timestamp in CET/CEST Stockholm local time when the purchase was made
+        data_type: datetime
+      - name: device_key
+        description: Unique, synthetic identifier for the device
+        data_type: string
+      - name: price_usd
+        description: Price of the in-app purchase converted to USD
+        data_type: float
+      - name: product_name
+        description: Name of the product purchased, in lowercase
+        data_type: string
+      - name: quantity
+        description: Quantity of the product purchased, seems to always be 1 in the data observed
+        data_type: integer
