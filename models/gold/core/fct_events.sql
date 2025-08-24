@@ -10,8 +10,6 @@ with events as (select * from {{ ref("stg_events") }}
 {% endif %}
 ),
 
-
-
 final as (
     select
         md5(concat_ws(ga_session_id, device_id, install_id)) as session_id,
