@@ -75,7 +75,7 @@ def model(dbt, session):
         .agg(F.first("param_value"))
     )
 
-    # Cast columns into correct data types and drop duplicates
+    # Cast columns into correct data types and drop duplicates and add synthetic key for uniqueness
     final_df = (
         pivoted_df
         .withColumn("event_timestamp", (F.col("event_timestamp")/1e6).cast("timestamp"))
@@ -89,7 +89,19 @@ def model(dbt, session):
         .withColumn("session_engaged", (F.col("session_engaged") == "1").cast("boolean"))
         .withColumn("subscription", (F.col("subscription") == "1").cast("boolean"))
         .withColumn("validated", (F.col("validated") == "1").cast("boolean"))
-        .dropDuplicates(["event_timestamp", "event_name", "device_id", "install_id"])
+        .withColumn(
+            "event_key",
+            md5(
+                concat_ws(
+                    "||",
+                    F.col("event_timestamp").cast("string"),
+                    F.col("device_id").cast("string"),
+                    F.col("install_id").cast("string"),
+                    F.col("event_name").cast("string")
+                )
+            )
+        )
+        .dropDuplicates(["event_key"])
     )
 
     return final_df

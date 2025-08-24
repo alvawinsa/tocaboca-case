@@ -1,3 +1,121 @@
 models:
   - name: stg_events
-    description: a staging model, flattening out the complex structs of the raw file.
+    description: >
+      Staging model for the GA4 events for Toba Boba World game. Flattened to be
+      one row per a single event. Deduplicated.
+    columns:
+      - name: event_date
+        description: Date of the event as logged by GA4
+        data_type: date
+      - name: event_timestamp
+        description: Timestamp of the event as logged by GA4
+        data_type: datetime
+      - name: event_name
+        description: Name of the GA4 event (e.g., app_started, purchase, level_up).
+        data_type: string
+      - name: device_id
+        description: >
+          Identifier for the device. Can be null and negative. The id can change
+          if the app is re-installed.
+        data_type: integer
+      - name: install_id
+        description: Unique ID for the app installation on a device.
+        data_type: integer
+      - name: device_category
+        description: Type of device used for event
+        data_type: string
+        data_tests:
+          - accepted_values:
+              values: ["smart tv", "tablet", "desktop", "mobile"]
+      - name: install_source
+        description: >
+          Store or source the app was installed from, installer package name, e.g. 
+          Google play store ('com.android.vending')
+        data_type: string
+      - name: ingested_at
+        description: Timestamp when the raw event was ingested into the bronze layer.
+        data_type: datetime
+        data_tests:
+          - not_null
+      - name: count
+        description: Honestly I don't know, but would add something useful here :)
+        data_type: integer
+      - name: currency
+        description: Currency code for the purchase events
+        data_type: string
+      - name: engaged_session_event
+        description: If an event deemed as engaging has happened, e.g. viewing certain screen.
+        data_type: boolean
+      - name: firebase_conversion
+        description: >
+          Boolean flag if the event is marked as a Firebase conversion. This is
+          when an event tied to an important business outcome happens, e.g. a purchase
+          or a signup.
+        data_type: boolean
+      - name: firebase_event_origin
+        description: >
+          Origin of event: app, or auto
+        data_type: string
+      - name: firebase_screen_class
+        description: Screen class name where the event occurred.
+        data_type: string
+      - name: firebase_screen_id
+        description: Unique identifier for the screen within Firebase context.
+        data_type: string
+      - name: ga_dedupe_id
+        description: >
+          Identifier used by GA4 to deduplicate events.
+          Note: I probably could've used this with ga_session_id to identify
+          uniqueness better in this table, but I needed to know more about how 
+          they work to use it. If I had more time I would have.
+        data_type: string
+        data_tests:
+          - not_null:
+              config:
+                severity: warn
+      - name: ga_session_id
+        description: ID of the GA4 session this event belongs to.
+        data_type: bigint
+        data_tests:
+          - not_null:
+              config:
+                severity: warn # my feeling is that they shouldn't be null, but not time to look into
+      - name: ga_session_number
+        description: Sequence number of the session for the user/device.
+        data_type: integer
+      - name: price
+        description: Price of the item in local currency.
+        data_type: float
+      - name: product_name
+        description: If an 'in_app_purchase' event, then the name of product bought.
+        data_type: string
+      - name: quantity
+        description: Quantity of products bought.
+        data_type: integer
+      - name: reason
+        description: Reason stored for event, context, e.g. as to why app crashed
+        data_type: string
+      - name: session_engaged
+        description: >
+          Boolean flag if the session was considered engaged. GA4 considers it engaged
+          if any of the following is met
+            - session lasted 10s or longer,
+            - session included one or more events considered conversion events
+            - user viewed 2 or more pages during session
+        data_type: boolean
+      - name: subscription
+        description: I'm assuming boolean flag for if the session is attributed to a subscription.
+        data_type: boolean
+      - name: validated
+        description: Boolean flag indicating if the event has been validated, assume by GA4
+        data_type: boolean
+      - name: value
+        description: Monetary or numeric value associated with the event (scaled down to decimal).
+        data_type: float
+      - name: event_key
+        description: >
+         a synthetic key composed of event_timestamp, event_name, install_id, and device_id to 
+         better keep integrity and test for uniqueness
+        data_type: string
+        data_tests:
+          - unique
