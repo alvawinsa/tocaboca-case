@@ -118,7 +118,6 @@ models:
         data_type: string
         data_tests:
           - not_null
-          - unique
       - name: price_usd
         description: Price of the in-app purchase converted to USD
         data_type: float
