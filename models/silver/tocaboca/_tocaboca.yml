@@ -65,16 +65,13 @@ models:
       - name: ga_dedupe_id
         description: >
           Identifier used by GA4 to deduplicate events.
-          Note: I probably could've used this with ga_session_id to identify
-          uniqueness better in this table, but I needed to know more about how
-          they work to use it. If I had more time I would have.
         data_type: string
         data_tests:
           - not_null:
               config:
                 severity: warn
       - name: ga_session_id
-        description: ID of the GA4 session this event belongs to.
+        description: ID of the GA4 session this event belongs to. Not globally unique.
         data_type: bigint
         data_tests:
           - not_null:
