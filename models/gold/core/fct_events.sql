@@ -7,8 +7,6 @@ final as (
         device_id,
         install_id,
         event_name,
-        device_category,
-        install_source,
         engaged_session_event,
         is_conversion_event,
         event_origin,

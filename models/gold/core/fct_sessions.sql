@@ -13,6 +13,7 @@ with final as (
         device_id,
         install_id,
         install_source,
+        -- these booleans have true/null in silver model, I would've cleaned that up to be true/false, but lack of time...
         max(case when event_name = 'store_impression' then true else false end) as has_store_impression,
         max(case when event_name = 'app_crashed' then true else false end) as has_app_crashed,
         max(case when event_name = 'store_entry' then true else false end) as has_entered_store,
