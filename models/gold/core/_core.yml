@@ -128,7 +128,7 @@ models:
         description: Quantity of the product purchased, seems to always be 1 in the data observed
         data_type: integer
 
-  - name: dim_products
+  - name: dim_product
     description: Dimension table for products
     columns:
       - name: product_name
