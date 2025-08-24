@@ -1,4 +1,16 @@
-with events as (select * from {{ ref("stg_events") }}),
+{{
+    config(
+        materialized='incremental'
+    )
+}}
+with events as (select * from {{ ref("stg_events") }}
+-- only scan latest two days for efficiency
+{% if is_incremental() %}
+        where event_timestamp >= dateadd(day, -2, current_date)
+{% endif %}
+),
+
+
 
 final as (
     select
@@ -12,7 +24,14 @@ final as (
         screen_class,
         ga_session_number as session_number,
         has_subscription
-    from stg_events
+    from events
 )
 
 select * from final
+-- check latest timestamp to only add new records since then
+{% if is_incremental() %}
+    where event_timestamp_local >= (
+        select coalesce(max(event_timestamp_local), '2000-01-01')
+        from {{ this }}
+    )
+{% endif %}
