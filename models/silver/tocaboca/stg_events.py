@@ -91,8 +91,8 @@ def model(dbt, session):
         .withColumn("validated", (F.col("validated") == "1").cast("boolean"))
         .withColumn(
             "event_key",
-            md5(
-                concat_ws(
+            F.md5(
+                F.concat_ws(
                     "||",
                     F.col("event_timestamp").cast("string"),
                     F.col("device_id").cast("string"),
