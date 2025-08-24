@@ -17,11 +17,8 @@ models:
       - name: session_duration_seconds
         description: Duration of the session in seconds
         data_type: integer
-      - name: device_id
-        description: Unique identifier for the device, can be null
-        data_type: string
-      - name: install_id
-        description: Unique identifier for the app installation
+      - name: device_key
+        description: Unique, synthetic identifier for the device
         data_type: string
       - name: install_source
         description: Source from which the app was installed
@@ -57,11 +54,8 @@ models:
       - name: event_timestamp_local
         description: Timestamp in CET/CEST Stockholm local time when the event occurred
         data_type: datetime
-      - name: device_id
-        description: Unique identifier for the device, can be null
-        data_type: string
-      - name: install_id
-        description: Unique identifier for the app installation
+      - name: device_key
+        description: Unique, synthetic identifier for the device
         data_type: string
       - name: event_name
         description: Name of the event
@@ -88,12 +82,18 @@ models:
   - name: dim_device
     description: one row per device_id (synthetic), contains data on devices
     columns:
-      - name: device_id
+      - name: device_key
         description: Unique, synthetic, identifier for the device combined with install_id
         data_type: string
         data_tests:
           - not_null
           - unique
+      - name: device_id
+        description: identifier for device from GA4, can be null
+        data_type: string
+      - name: install_id
+        description: identifier for app installation from GA4, can be null
+        data_type: string
       - name: first_event_at_local
         description: Timestamp in CET/CEST of the first event for the device
         data_type: datetime

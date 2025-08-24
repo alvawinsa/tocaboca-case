@@ -4,8 +4,7 @@ final as (
     select
         md5(concat_ws(ga_session_id, device_id, install_id)) as session_id,
         from_utc_timestamp(event_timestamp, 'Europe/Stockholm') as event_timestamp_local,
-        device_id,
-        install_id,
+        md5(concat_ws(device_id, install_id)) as device_key,
         event_name,
         engaged_session_event,
         is_conversion_event,
