@@ -114,8 +114,42 @@ models:
         data_type: float
       - name: event_key
         description: >
-         a synthetic key composed of event_timestamp, event_name, install_id, and device_id to 
-         better keep integrity and test for uniqueness
+          a synthetic key composed of event_timestamp, event_name, install_id, and device_id to 
+          better keep integrity and test for uniqueness
         data_type: string
         data_tests:
           - unique
+
+  - name: stg_products
+    description: staging model for Toba Boba world products, one row per product
+    columns:
+      - name: product_name
+        description: Toba Boba's name of the product
+        data_type: string
+        data_tests:
+          - unique
+          - not_null
+      - name: product_type
+        description: higher level category of the product
+        data_type: string
+        data_tests:
+          - not_null
+          - accepted_values:
+              values:
+                - ["Creator Pack", "Playset", "Bundle"]
+      - name: product_subtype
+        description: sub category of product type
+        data_type: string
+        data_tests:
+          - not_null
+          - accepted_values:
+              values:
+                - [
+                    "Character Creator Upgrade",
+                    "Character Creator Style Pack",
+                    "Home Designer Template Pack",
+                    "Home Designer Furniture Pack",
+                    "Playset",
+                    "Bundle",
+                    "Home Designer Empty Building",
+                  ]
