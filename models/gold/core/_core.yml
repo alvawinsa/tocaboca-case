@@ -135,6 +135,9 @@ models:
       - name: product_name
         description: Name of the product, all in lowercase
         data_type: string
+        data_tests:
+          - not_null
+          - unique
       - name: product_type
         description: Higher level category of the product, all in lowercase
         data_type: string
