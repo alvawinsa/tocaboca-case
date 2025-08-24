@@ -1,0 +1,16 @@
+sources:
+  - name: tocaboca
+    description: tocaboca data on products, exchange rates and G4A events
+    loader: databricks_ingestion
+    catalog: prod_bronze
+    schema: tocaboca
+    freshness:
+      warn_after: { count: 2, period: day }
+    loaded_at_field: ingested_at
+    tables:
+      - name: events
+        description: Google analytics events for TocaBoca
+      - name: products
+        description: products data for TocaBoca
+      - name: exchange_rates
+        description: Daily exchange rates data 
