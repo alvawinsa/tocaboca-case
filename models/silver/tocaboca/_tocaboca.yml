@@ -133,7 +133,9 @@ models:
           - not_null
           - accepted_values:
               values:
-                - ["creator pack", "playset", "bundle"]
+                - "creator pack"
+                - "playset"
+                - "bundle"
       - name: product_subtype
         description: sub category of product type
         data_type: string
@@ -141,16 +143,13 @@ models:
           - not_null
           - accepted_values:
               values:
-                - [
-                  "character creator upgrade",
-                  "character creator style pack",
-                  "home designer template pack",
-                  "home designer furniture pack",
-                  "playset",
-                  "bundle",
-                  "home designer empty building",
-                ]
-
+                - "character creator upgrade"
+                - "character creator style pack"
+                - "home designer template pack"
+                - "home designer furniture pack"
+                - "playset"
+                - "bundle"
+                - "home designer empty building"
   - name: stg_exchange_rates
     description: >
       contains exchange rates to usd, one row per day per currency code. Only
