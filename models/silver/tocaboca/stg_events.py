@@ -95,6 +95,7 @@ def model(dbt, session):
         .withColumnRenamed("firebase_screen_class", "screen_class")
         .withColumnRenamed("firebase_screen_id", "screen_id")
         .withColumnRenamed("validated", "is_validated")
+        .withColumn("product_name", F.lower(F.col("product_name")))
         .withColumn(
             "event_key",
             F.md5(
