@@ -4,8 +4,11 @@ with events as (select * from {{ ref("stg_events") }}),
 with final as (
     select
         md5(concat_ws(ga_session_id, device_id, install_id)) as session_id,
-        min(case when event_name = 'session_start' then event_timestamp end) as session_start_at,
-        max(event_timestamp) as session_end_at,
+        from_utc_timestamp(
+            min(case when event_name = 'session_start' then event_timestamp end),
+            'Europe/Stockholm'
+        ) as session_start_at_local,
+        from_utc_timestamp(max(event_timestamp), 'Europe/Stockholm') as session_end_at_local,
         unix_timestamp(max(event_timestamp)) - unix_timestamp(min(case when event_name = 'session_start' then event_timestamp end)) as session_duration_seconds,
         device_id,
         install_id,

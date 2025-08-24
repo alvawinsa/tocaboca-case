@@ -3,16 +3,16 @@ models:
     description: one row per session, with session level flags and metrics
     columns:
       - name: session_id
-        description: Unique identifier for the session
+        description: Unique, synthetic identifier for the session
         data_type: string
         data_tests:
           - not_null
           - unique
-      - name: session_start_at
-        description: Timestamp when the session started. Sessions without session_start events are filtered out.
+      - name: session_start_at_local
+        description: Timestamp in CET/CEST Stockolm local time  when the session started. Sessions without session_start events are filtered out.
         data_type: datetime
-      - name: session_end_at
-        description: Max timestamp for the session
+      - name: session_end_at_local
+        description: Max timestamp in CET/CEST Stockholm local time for the session
         data_type: datetime
       - name: session_duration_seconds
         description: Duration of the session in seconds
@@ -43,4 +43,50 @@ models:
         data_type: boolean
       - name: has_subscription
         description: Whether the session included a subscription event
+        data_type: boolean
+
+  - name: fct_events
+    description: one row per single event, deduplicated
+    columns:
+      - name: session_id
+        description: Unique, synthetic identifier for the session
+        data_type: string
+        data_tests:
+          - not_null
+          - unique
+      - name: event_timestamp_local
+        description: Timestamp in CET/CEST Stockholm local time when the event occurred
+        data_type: datetime
+      - name: device_id
+        description: Unique identifier for the device, can be null
+        data_type: string
+      - name: install_id
+        description: Unique identifier for the app installation
+        data_type: string
+      - name: event_name
+        description: Name of the event
+        data_type: string
+      - name: device_category
+        description: Category of the device
+        data_type: string
+      - name: install_source
+        description: Source from which the app was installed
+        data_type: string
+      - name: engaged_session_event
+        description: Whether the event was part of an engaged session
+        data_type: boolean
+      - name: is_conversion_event
+        description: Whether the event was a conversion event
+        data_type: boolean
+      - name: event_origin
+        description: Origin of the event
+        data_type: string
+      - name: screen_class
+        description: Class of the screen where the event occurred
+        data_type: string
+      - name: session_number
+        description: Number of the session
+        data_type: integer
+      - name: has_subscription
+        description: Whether the event was related to a subscription
         data_type: boolean

@@ -7,7 +7,7 @@ def model(dbt, session):
 
     if dbt.is_incremental:
 
-        # only new rows compared to latest record in current table
+        # Only new rows compared to latest record in current table
         max_from_this = f"select max(ingested_at) from {dbt.this}"
         bronze_df = bronze_df.filter(bronze_df.ingested_at >= session.sql(max_from_this).collect()[0][0])
 
@@ -76,6 +76,7 @@ def model(dbt, session):
     )
 
     # Cast columns into correct data types, rename columns, drop duplicates and add synthetic key for uniqueness
+    # Normally I'd split out some of these actions, but for sake of efficiency, it's all done in the final df
     final_df = (
         pivoted_df
         .withColumn("event_timestamp", (F.col("event_timestamp")/1e6).cast("timestamp"))
