@@ -8,8 +8,8 @@ def model(dbt, session):
     if dbt.is_incremental:
 
         # only new rows compared to latest record in current table
-        max_from_this = f"select max(updated_at) from {dbt.this}"
-        bronze_df = bronze_df.filter(bronze_df.updated_at >= session.sql(max_from_this).collect()[0][0])
+        max_from_this = f"select max(ingested_at) from {dbt.this}"
+        bronze_df = bronze_df.filter(bronze_df.ingested_at >= session.sql(max_from_this).collect()[0][0])
 
     # Toggle env for dev vs prod
     environment = "dev"
@@ -89,7 +89,6 @@ def model(dbt, session):
         .withColumn("session_engaged", (F.col("session_engaged") == "1").cast("boolean"))
         .withColumn("subscription", (F.col("subscription") == "1").cast("boolean"))
         .withColumn("validated", (F.col("validated") == "1").cast("boolean"))
-        .withColumn("updated_at", F.current_timestamp())
         .dropDuplicates(["event_timestamp", "event_name", "device_id", "install_id"])
     )
 
