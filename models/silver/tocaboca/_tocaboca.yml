@@ -29,7 +29,7 @@ models:
               values: ["smart tv", "tablet", "desktop", "mobile"]
       - name: install_source
         description: >
-          Store or source the app was installed from, installer package name, e.g. 
+          Store or source the app was installed from, installer package name, e.g.
           Google play store ('com.android.vending')
         data_type: string
       - name: ingested_at
@@ -66,7 +66,7 @@ models:
         description: >
           Identifier used by GA4 to deduplicate events.
           Note: I probably could've used this with ga_session_id to identify
-          uniqueness better in this table, but I needed to know more about how 
+          uniqueness better in this table, but I needed to know more about how
           they work to use it. If I had more time I would have.
         data_type: string
         data_tests:
@@ -81,7 +81,7 @@ models:
               config:
                 severity: warn # my feeling is that they shouldn't be null, but not time to look into
       - name: ga_session_number
-        description: Sequence number of the session for the user/device.
+        description: Number of sessions in sequence device has had.
         data_type: integer
       - name: price
         description: Price of the item in local currency.
@@ -114,7 +114,7 @@ models:
         data_type: float
       - name: event_key
         description: >
-          a synthetic key composed of event_timestamp, event_name, install_id, and device_id to 
+          a synthetic key composed of event_timestamp, event_name, install_id, and device_id to
           better keep integrity and test for uniqueness
         data_type: string
         data_tests:
@@ -155,7 +155,7 @@ models:
                 ]
 
   - name: stg_exchange_rates
-    description: > 
+    description: >
       contains exchange rates to usd, one row per day per currency code. Only
       contains currencies that have actually been used in purchases
     data_tests:
@@ -165,7 +165,7 @@ models:
             - currency_code
     columns:
       - name: date
-        description: date of the exchange rate 
+        description: date of the exchange rate
         data_type: date
       - name: currency_code
         description: the code for the currency, only ones relevant from app
