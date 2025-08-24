@@ -1,5 +1,5 @@
 ## Overview
-This repo contains analytics transformation scripts for TocaBoca, done through dbt. It also at the moment contains Databricks ingestion scripts for the raw data, which should live in another repo, but for ease of use for this case they were merged.
+This repo contains analytics transformation scripts for TocaBoca, done through dbt. It also at the moment contains Databricks ingestion scripts for the raw data, which should live in another repo, but for ease of use for this case they were merged. I sometimes accidentally refer to this analytics project or the tables as "TocaBoca" instead of "TobaBoba" :) apologies.
 
 ### Repo structure
 ```text
