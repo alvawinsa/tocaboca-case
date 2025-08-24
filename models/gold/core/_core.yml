@@ -1,0 +1,46 @@
+models:
+  - name: fct_sessions
+    description: one row per session, with session level flags and metrics
+    columns:
+      - name: session_id
+        description: Unique identifier for the session
+        data_type: string
+        data_tests:
+          - not_null
+          - unique
+      - name: session_start_at
+        description: Timestamp when the session started. Sessions without session_start events are filtered out.
+        data_type: datetime
+      - name: session_end_at
+        description: Max timestamp for the session
+        data_type: datetime
+      - name: session_duration_seconds
+        description: Duration of the session in seconds
+        data_type: integer
+      - name: device_id
+        description: Unique identifier for the device, can be null
+        data_type: string
+      - name: install_id
+        description: Unique identifier for the app installation
+        data_type: string
+      - name: install_source
+        description: Source from which the app was installed
+        data_type: string
+      - name: has_store_impression
+        description: Not totally sure what this is, but would find out and describe
+        data_type: boolean
+      - name: has_app_crashed
+        description: Whether the session included an app crashed event
+        data_type: boolean
+      - name: has_entered_store
+        description: Whether the session included a store entry event
+        data_type: boolean
+      - name: has_in_app_purchased
+        description: Whether the session included an in-app purchase event
+        data_type: boolean
+      - name: is_session_engaged
+        description: Whether the session was engaged
+        data_type: boolean
+      - name: has_subscription
+        description: Whether the session included a subscription event
+        data_type: boolean
