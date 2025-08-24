@@ -40,7 +40,7 @@ models:
       - name: count
         description: Honestly I don't know, but would add something useful here :)
         data_type: integer
-      - name: currency
+      - name: currency_code
         description: Currency code for the purchase events
         data_type: string
       - name: engaged_session_event
