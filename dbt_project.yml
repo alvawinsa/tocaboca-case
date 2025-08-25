@@ -32,3 +32,11 @@ models:
         {%- if target.name == "prod" -%} prod_silver
         {%- else -%} sandbox
         {%- endif -%}
+    gold:
+      +meta:
+        owner: "Data team"
+      +materialized: table
+      +catalog: |
+        {%- if target.name == "prod" -%} prod_gold
+        {%- else -%} sandbox
+        {%- endif -%}

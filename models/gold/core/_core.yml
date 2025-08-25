@@ -1,0 +1,145 @@
+models:
+  - name: fct_sessions
+    description: one row per session, with session level flags and metrics
+    columns:
+      - name: session_id
+        description: Unique, synthetic identifier for the session
+        data_type: string
+        data_tests:
+          - not_null
+          - unique
+      - name: session_start_at_local
+        description: Timestamp in CET/CEST Stockolm local time  when the session started. Sessions without session_start events are filtered out.
+        data_type: datetime
+      - name: session_end_at_local
+        description: Max timestamp in CET/CEST Stockholm local time for the session
+        data_type: datetime
+      - name: session_duration_seconds
+        description: Duration of the session in seconds
+        data_type: integer
+      - name: device_key
+        description: Unique, synthetic identifier for the device
+        data_type: string
+      - name: install_source
+        description: Source from which the app was installed
+        data_type: string
+      - name: has_store_impression
+        description: Not totally sure what this is, but would find out and describe
+        data_type: boolean
+      - name: has_app_crashed
+        description: Whether the session included an app crashed event
+        data_type: boolean
+      - name: has_entered_store
+        description: Whether the session included a store entry event
+        data_type: boolean
+      - name: has_in_app_purchased
+        description: Whether the session included an in-app purchase event
+        data_type: boolean
+      - name: is_session_engaged
+        description: Whether the session was engaged
+        data_type: boolean
+      - name: has_subscription
+        description: Whether the session included a subscription event
+        data_type: boolean
+
+  - name: fct_events
+    description: one row per single event, deduplicated
+    columns:
+      - name: session_id
+        description: Unique, synthetic identifier for the session
+        data_type: string
+        data_tests:
+          - not_null
+          - unique
+      - name: event_timestamp_local
+        description: Timestamp in CET/CEST Stockholm local time when the event occurred
+        data_type: datetime
+      - name: device_key
+        description: Unique, synthetic identifier for the device
+        data_type: string
+      - name: event_name
+        description: Name of the event
+        data_type: string
+      - name: engaged_session_event
+        description: Whether the event was part of an engaged session
+        data_type: boolean
+      - name: is_conversion_event
+        description: Whether the event was a conversion event
+        data_type: boolean
+      - name: event_origin
+        description: Origin of the event
+        data_type: string
+      - name: screen_class
+        description: Class of the screen where the event occurred
+        data_type: string
+      - name: session_number
+        description: Number of the session
+        data_type: integer
+      - name: has_subscription
+        description: Whether the event was related to a subscription
+        data_type: boolean
+
+  - name: dim_device
+    description: one row per device_id (synthetic), contains data on devices
+    columns:
+      - name: device_key
+        description: Unique, synthetic, identifier for the device combined with install_id
+        data_type: string
+        data_tests:
+          - not_null
+          - unique
+      - name: device_id
+        description: identifier for device from GA4, can be null
+        data_type: string
+      - name: install_id
+        description: identifier for app installation from GA4, can be null
+        data_type: string
+      - name: first_event_at_local
+        description: Timestamp in CET/CEST of the first event for the device
+        data_type: datetime
+      - name: last_event_at_local
+        description: Timestamp in CET/CEST of the last event for the device
+        data_type: datetime
+      - name: number_of_sessions
+        description: Number of sessions associated with the device
+        data_type: integer
+      - name: has_subscription
+        description: Whether the device has an active subscription. Not sure this is really what it is.
+        data_type: boolean
+
+  - name: fct_purchases
+    description: one row per in-app purchase event, with price converted to USD
+    columns:
+      - name: purchased_at_local
+        description: Timestamp in CET/CEST Stockholm local time when the purchase was made
+        data_type: datetime
+      - name: device_key
+        description: Unique, synthetic identifier for the device
+        data_type: string
+        data_tests:
+          - not_null
+      - name: price_usd
+        description: Price of the in-app purchase converted to USD
+        data_type: float
+      - name: product_name
+        description: Name of the product purchased, in lowercase
+        data_type: string
+      - name: quantity
+        description: Quantity of the product purchased, seems to always be 1 in the data observed
+        data_type: integer
+
+  - name: dim_product
+    description: Dimension table for products
+    columns:
+      - name: product_name
+        description: Name of the product, all in lowercase
+        data_type: string
+        data_tests:
+          - not_null
+          - unique
+      - name: product_type
+        description: Higher level category of the product, all in lowercase
+        data_type: string
+      - name: product_subtype
+        description: Subtype of the product, all in lowercase
+        data_type: string

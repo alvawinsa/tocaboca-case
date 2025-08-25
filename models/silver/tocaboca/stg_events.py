@@ -7,7 +7,7 @@ def model(dbt, session):
 
     if dbt.is_incremental:
 
-        # only new rows compared to latest record in current table
+        # Only new rows compared to latest record in current table
         max_from_this = f"select max(ingested_at) from {dbt.this}"
         bronze_df = bronze_df.filter(bronze_df.ingested_at >= session.sql(max_from_this).collect()[0][0])
 
@@ -76,6 +76,7 @@ def model(dbt, session):
     )
 
     # Cast columns into correct data types, rename columns, drop duplicates and add synthetic key for uniqueness
+    # Normally I'd split out some of these actions, but for sake of efficiency, it's all done in the final df
     final_df = (
         pivoted_df
         .withColumn("event_timestamp", (F.col("event_timestamp")/1e6).cast("timestamp"))
@@ -83,13 +84,18 @@ def model(dbt, session):
         .withColumn("value", F.col("value").cast("double") / 1e6)
         .withColumn("quantity", F.col("quantity").cast("int"))
         .withColumn("count", F.col("count").cast("int"))
-        .withColumn("engaged_session_event", (F.col("engaged_session_event") == "1").cast("boolean"))
-        .withColumn("firebase_conversion", (F.col("firebase_conversion") == "1").cast("boolean"))
+        .withColumn("is_engaged_session_event", (F.col("engaged_session_event") == "1").cast("boolean"))
+        .withColumn("is_conversion_event", (F.col("firebase_conversion") == "1").cast("boolean"))
         .withColumn("ga_session_id", F.col("ga_session_id").cast("long"))
-        .withColumn("session_engaged", (F.col("session_engaged") == "1").cast("boolean"))
-        .withColumn("subscription", (F.col("subscription") == "1").cast("boolean"))
+        .withColumn("is_session_engaged", (F.col("session_engaged") == "1").cast("boolean"))
+        .withColumn("has_subscription", (F.col("subscription") == "1").cast("boolean"))
         .withColumn("validated", (F.col("validated") == "1").cast("boolean"))
         .withColumnRenamed("currency", "currency_code")
+        .withColumnRenamed("firebase_event_origin", "event_origin")
+        .withColumnRenamed("firebase_screen_class", "screen_class")
+        .withColumnRenamed("firebase_screen_id", "screen_id")
+        .withColumnRenamed("validated", "is_validated")
+        .withColumn("product_name", F.lower(F.col("product_name")))
         .withColumn(
             "event_key",
             F.md5(

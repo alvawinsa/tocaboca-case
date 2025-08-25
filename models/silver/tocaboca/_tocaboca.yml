@@ -8,7 +8,7 @@ models:
         description: Date of the event as logged by GA4
         data_type: date
       - name: event_timestamp
-        description: Timestamp of the event as logged by GA4
+        description: Timestamp in UTC of the event as logged by GA4
         data_type: datetime
       - name: event_name
         description: Name of the GA4 event (e.g., app_started, purchase, level_up).
@@ -29,11 +29,11 @@ models:
               values: ["smart tv", "tablet", "desktop", "mobile"]
       - name: install_source
         description: >
-          Store or source the app was installed from, installer package name, e.g. 
+          Store or source the app was installed from, installer package name, e.g.
           Google play store ('com.android.vending')
         data_type: string
       - name: ingested_at
-        description: Timestamp when the raw event was ingested into the bronze layer.
+        description: Timestamp in UTC when the raw event was ingested into the bronze layer.
         data_type: datetime
         data_tests:
           - not_null
@@ -43,45 +43,42 @@ models:
       - name: currency_code
         description: Currency code for the purchase events
         data_type: string
-      - name: engaged_session_event
+      - name: is_engaged_session_event
         description: If an event deemed as engaging has happened, e.g. viewing certain screen.
         data_type: boolean
-      - name: firebase_conversion
+      - name: is_conversion_event
         description: >
           Boolean flag if the event is marked as a Firebase conversion. This is
           when an event tied to an important business outcome happens, e.g. a purchase
           or a signup.
         data_type: boolean
-      - name: firebase_event_origin
+      - name: event_origin
         description: >
           Origin of event: app, or auto
         data_type: string
-      - name: firebase_screen_class
+      - name: screen_class
         description: Screen class name where the event occurred.
         data_type: string
-      - name: firebase_screen_id
+      - name: screen_id
         description: Unique identifier for the screen within Firebase context.
         data_type: string
       - name: ga_dedupe_id
         description: >
           Identifier used by GA4 to deduplicate events.
-          Note: I probably could've used this with ga_session_id to identify
-          uniqueness better in this table, but I needed to know more about how 
-          they work to use it. If I had more time I would have.
         data_type: string
         data_tests:
           - not_null:
               config:
                 severity: warn
       - name: ga_session_id
-        description: ID of the GA4 session this event belongs to.
+        description: ID of the GA4 session this event belongs to. Not globally unique.
         data_type: bigint
         data_tests:
           - not_null:
               config:
                 severity: warn # my feeling is that they shouldn't be null, but not time to look into
       - name: ga_session_number
-        description: Sequence number of the session for the user/device.
+        description: Number of sessions in sequence device has had.
         data_type: integer
       - name: price
         description: Price of the item in local currency.
@@ -95,7 +92,7 @@ models:
       - name: reason
         description: Reason stored for event, context, e.g. as to why app crashed
         data_type: string
-      - name: session_engaged
+      - name: is_session_engaged
         description: >
           Boolean flag if the session was considered engaged. GA4 considers it engaged
           if any of the following is met
@@ -103,10 +100,10 @@ models:
             - session included one or more events considered conversion events
             - user viewed 2 or more pages during session
         data_type: boolean
-      - name: subscription
+      - name: has_subscription
         description: I'm assuming boolean flag for if the session is attributed to a subscription.
         data_type: boolean
-      - name: validated
+      - name: is_validated
         description: Boolean flag indicating if the event has been validated, assume by GA4
         data_type: boolean
       - name: value
@@ -114,7 +111,7 @@ models:
         data_type: float
       - name: event_key
         description: >
-          a synthetic key composed of event_timestamp, event_name, install_id, and device_id to 
+          a synthetic key composed of event_timestamp, event_name, install_id, and device_id to
           better keep integrity and test for uniqueness
         data_type: string
         data_tests:
@@ -136,7 +133,9 @@ models:
           - not_null
           - accepted_values:
               values:
-                - ["creator pack", "playset", "bundle"]
+                - "creator pack"
+                - "playset"
+                - "bundle"
       - name: product_subtype
         description: sub category of product type
         data_type: string
@@ -144,18 +143,15 @@ models:
           - not_null
           - accepted_values:
               values:
-                - [
-                  "character creator upgrade",
-                  "character creator style pack",
-                  "home designer template pack",
-                  "home designer furniture pack",
-                  "playset",
-                  "bundle",
-                  "home designer empty building",
-                ]
-
+                - "character creator upgrade"
+                - "character creator style pack"
+                - "home designer template pack"
+                - "home designer furniture pack"
+                - "playset"
+                - "bundle"
+                - "home designer empty building"
   - name: stg_exchange_rates
-    description: > 
+    description: >
       contains exchange rates to usd, one row per day per currency code. Only
       contains currencies that have actually been used in purchases
     data_tests:
@@ -165,7 +161,7 @@ models:
             - currency_code
     columns:
       - name: date
-        description: date of the exchange rate 
+        description: date of the exchange rate
         data_type: date
       - name: currency_code
         description: the code for the currency, only ones relevant from app
