@@ -1,0 +1,18 @@
+models:
+  - name: int_purchases
+    description: >
+      ephemeral (not materialised) model splitting out logic for in app purchases on purchase level.
+      Built as int model so these metrics can be used in multiple downstream models.
+    columns:
+      - name: purchased_at_local
+        description: Timestamp in CET/CEST Stockholm local time when the purchase occurred
+        data_type: datetime
+      - name: device_id
+        description: Unique identifier for device, can be null for some earlier events where its coalesced with install_id.
+        data_type: string
+      - name: price_usd
+        description: Price of the purchased item, converted to USD using the exchange rate on the day of the purchase.
+        data_type: float
+      - name: product_name
+        description: Name of the purchased product, lowercased.
+        data_type: string

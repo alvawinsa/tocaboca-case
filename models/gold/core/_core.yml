@@ -103,6 +103,15 @@ models:
       - name: has_subscription
         description: Whether the device has an active subscription. Not sure this is really what it is.
         data_type: boolean
+      - name: total_usd_spent
+        description: Total amount spent in USD by the device
+        data_type: float
+      - name: total_products
+        description: Total number of products purchased by the device
+        data_type: integer
+      - name: has_purchased
+        description: Whether the device has made any purchases
+        data_type: boolean
 
   - name: fct_purchases
     description: one row per in-app purchase event, with price converted to USD
