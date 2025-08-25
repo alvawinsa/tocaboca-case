@@ -10,7 +10,7 @@ with final as (
         ) as session_start_at_local,
         from_utc_timestamp(max(event_timestamp), 'Europe/Stockholm') as session_end_at_local,
         unix_timestamp(max(event_timestamp)) - unix_timestamp(min(case when event_name = 'session_start' then event_timestamp end)) as session_duration_seconds,
-        md5(concat_ws('||', device_id, install_id)) as device_key,
+        coalesce(device_id, install_id) as device_id,
         install_source,
         -- these booleans have true/null in silver model, I would've cleaned that up to be true/false, but lack of time...
         max(case when event_name = 'store_impression' then true else false end) as has_store_impression,

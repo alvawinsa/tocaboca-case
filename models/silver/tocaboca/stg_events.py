@@ -76,7 +76,7 @@ def model(dbt, session):
     )
 
     # Cast columns into correct data types, rename columns, drop duplicates and add synthetic key for uniqueness
-    # Normally I'd split out some of these actions, but for sake of efficiency, it's all done in the final df
+    # Normally I'd split out some of these actions... but for sake of efficiency, it's all done in the final df.
     final_df = (
         pivoted_df
         .withColumn("event_timestamp", (F.col("event_timestamp")/1e6).cast("timestamp"))
@@ -94,8 +94,15 @@ def model(dbt, session):
         .withColumnRenamed("firebase_event_origin", "event_origin")
         .withColumnRenamed("firebase_screen_class", "screen_class")
         .withColumnRenamed("firebase_screen_id", "screen_id")
-        .withColumnRenamed("validated", "is_validated")
         .withColumn("product_name", F.lower(F.col("product_name")))
+        .withColumn(
+            "install_source",
+            F.when(F.col("install_source") == "com.android.vending", "Google Play")
+             .when(F.col("install_source") == "com.google.android.packageinstaller", "Google Play")
+             .when(F.col("install_source") == "iTunes", "Apple App Store")
+             .when(F.col("install_source") == "com.amazon.venezia", "Amazon Appstore")
+        .otherwise("not legit")
+        )
         .withColumn(
             "event_key",
             F.md5(

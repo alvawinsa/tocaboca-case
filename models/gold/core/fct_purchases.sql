@@ -7,7 +7,7 @@ exchange_rates as (
 final as (
 select
     from_utc_timestamp(event_timestamp, 'Europe/Stockholm') as purchased_at_local,
-    md5(concat_ws('||', device_id, install_id)) as device_key,
+    coalesce(device_id, install_id) as device_id,
     price * usd_per_currency as price_usd,
     lower(product_name) as product_name,
     --quantity seems to always be 1, so assuming it may never bundle items even of the same kind, I would fix this in a prod model
