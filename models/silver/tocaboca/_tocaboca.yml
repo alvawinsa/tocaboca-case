@@ -15,11 +15,13 @@ models:
         data_type: string
       - name: device_id
         description: >
-          Identifier for the device. Can be null and negative. The id can change
-          if the app is re-installed.
+          Identifier for the device. Can be null and negative. The id should change a re-installation.
+          It is manually set by the app on first start and may therefore be missing on some early events.
         data_type: integer
       - name: install_id
-        description: Unique ID for the app installation on a device.
+        description: >
+          Unique ID for the app installation on a device. Each installation of the app has a globally unique id.
+          If the app is uninstalled and reinstalled it will have a new install_id.
         data_type: integer
       - name: device_category
         description: Type of device used for event

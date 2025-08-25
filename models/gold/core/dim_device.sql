@@ -2,10 +2,7 @@ with events as (select * from {{ ref("stg_events") }}),
 
 final as (
     select
-        -- md5 to get unique key and to avoid NULLs
-        md5(concat_ws('||', device_id, install_id)) as device_key,
-        device_id,
-        install_id,
+        coalesce(device_id, install_id) as device_id,
         max_by(device_category, event_timestamp) as device_category,
         max_by(install_source, event_timestamp) as install_source,
         from_utc_timestamp(min(event_timestamp), 'Europe/Stockholm') as first_event_at_local,
