@@ -23,6 +23,9 @@ models:
       - name: install_source
         description: Source from which the app was installed
         data_type: string
+        data_tests:
+          - accepted_values:
+              values: ["Google Play", "Apple App Store", "Amazon Appstore", "not legit"] # if anything else we'd want it flagged
       - name: has_store_impression
         description: Not totally sure what this is, but would find out and describe
         data_type: boolean

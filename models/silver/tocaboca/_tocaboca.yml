@@ -31,8 +31,8 @@ models:
               values: ["smart tv", "tablet", "desktop", "mobile"]
       - name: install_source
         description: >
-          Store or source the app was installed from, installer package name, e.g.
-          Google play store ('com.android.vending')
+          Store or source the app was installed from, installer package name, e.g.Google Play Store ('com.android.vending').
+          Contains a lot of non-legit ones that are just mapped to "not legit".
         data_type: string
       - name: ingested_at
         description: Timestamp in UTC when the raw event was ingested into the bronze layer.
