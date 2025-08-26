@@ -79,6 +79,11 @@ def model(dbt, session):
     # Normally I'd split out some of these actions... but for sake of efficiency, it's all done in the final df.
     final_df = (
         pivoted_df
+        .withColumnRenamed("currency", "currency_code")
+        .withColumnRenamed("firebase_event_origin", "event_origin")
+        .withColumnRenamed("firebase_screen_class", "screen_class")
+        .withColumnRenamed("firebase_screen_id", "screen_id")
+        .withColumnRenamed("device_id", "device_id_raw")
         .withColumn("event_timestamp", (F.col("event_timestamp")/1e6).cast("timestamp"))
         .withColumn("price", F.col("price").cast("double") / 1e6)
         .withColumn("value", F.col("value").cast("double") / 1e6)
@@ -90,18 +95,15 @@ def model(dbt, session):
         .withColumn("is_session_engaged", (F.col("session_engaged") == "1").cast("boolean"))
         .withColumn("has_subscription", (F.col("subscription") == "1").cast("boolean"))
         .withColumn("validated", (F.col("validated") == "1").cast("boolean"))
-        .withColumnRenamed("currency", "currency_code")
-        .withColumnRenamed("firebase_event_origin", "event_origin")
-        .withColumnRenamed("firebase_screen_class", "screen_class")
-        .withColumnRenamed("firebase_screen_id", "screen_id")
         .withColumn("product_name", F.lower(F.col("product_name")))
+        .withColumn("device_id", F.coalesce(F.col("device_id_raw"), F.col("install_id")))
         .withColumn(
             "install_source",
             F.when(F.col("install_source") == "com.android.vending", "Google Play")
-             .when(F.col("install_source") == "com.google.android.packageinstaller", "Google Play")
-             .when(F.col("install_source") == "iTunes", "Apple App Store")
-             .when(F.col("install_source") == "com.amazon.venezia", "Amazon Appstore")
-        .otherwise("not legit")
+            .when(F.col("install_source") == "com.google.android.packageinstaller", "Google Play")
+            .when(F.col("install_source") == "iTunes", "Apple App Store")
+            .when(F.col("install_source") == "com.amazon.venezia", "Amazon Appstore")
+            .otherwise("not legit")
         )
         .withColumn(
             "event_key",
@@ -110,7 +112,6 @@ def model(dbt, session):
                     "||",
                     F.col("event_timestamp").cast("string"),
                     F.col("device_id").cast("string"),
-                    F.col("install_id").cast("string"),
                     F.col("event_name").cast("string")
                 )
             )

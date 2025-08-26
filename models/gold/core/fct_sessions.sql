@@ -1,7 +1,7 @@
 with events as (select * from {{ ref("stg_events") }}),
 
 /* I would rename these to more sensible names if I had more context to what exactly they corresponded to */
-with final as (
+final as (
     select
         md5(concat_ws(ga_session_id, device_id, install_id)) as session_id,
         from_utc_timestamp(
@@ -25,5 +25,5 @@ with final as (
 
 select *
 from final
-where session_start_at is not null -- filter out all non-sessions
+where session_start_at_local is not null -- filter out all non-sessions
     and session_id is not null -- if we can't identify them it's not useful
