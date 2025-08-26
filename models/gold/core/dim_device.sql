@@ -5,7 +5,8 @@ with events as (select * from {{ ref("stg_events") }}),
             device_id,
             sum(price_usd) as total_usd_spent,
             sum(quantity) as total_products,
-            true as has_purchased
+            true as has_purchased,
+            min(purchased_at_local) as first_purchase_at_local
         from {{ref("int_purchases")}}
         group by all
     ),
@@ -18,6 +19,7 @@ with events as (select * from {{ ref("stg_events") }}),
             /* note this is not the same as their first session, I'd probably add that too */
             from_utc_timestamp(min(event_timestamp), 'Europe/Stockholm') as first_event_at_local,
             from_utc_timestamp(max(event_timestamp), 'Europe/Stockholm') as last_event_at_local,
+            first_purchase_at_local,
             max(ga_session_number) as number_of_sessions,
             coalesce(max(subscription), false) as has_subscription,
             coalesce(sum(total_usd_spent), 0) as total_usd_spent,

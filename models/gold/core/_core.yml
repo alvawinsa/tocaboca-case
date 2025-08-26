@@ -102,6 +102,9 @@ models:
       - name: last_event_at_local
         description: Timestamp in CET/CEST of the last event for the device
         data_type: datetime
+      - name: first_purchase_at_local
+        description: Timestamp in CET/CEST of the first purchase for the device
+        data_type: datetime
       - name: number_of_sessions
         description: Number of sessions associated with the device
         data_type: integer
