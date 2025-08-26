@@ -18,7 +18,7 @@ tocaboca/
 ```
 
 ### Ingestion
-These are the scripts that first mount, then save the tables from Azure Data Storage to Delta format in Databricks. As mentioned above, wouldn't normally live in the same repo, but added it here for this case since that'd be easier. They are extremely bare bones and not scalable, but a basic script to set things up
+These are the scripts that first mount, then save the tables from Azure Data Storage to Delta format in Databricks. As mentioned above, wouldn't normally live in the same repo, but added it here for this case since that'd be easier. They are extremely bare bones and not scalable, but a basic script to set things up. For example, in a prod setting I'd make them incremental, setup error handling and control these jobs with IaC instead.
 
 ### dbt
 I follow a "medallion architecture" here in the modelling structure. Essentially what that is is simply that bronze contains all raw, not transformed. It's a landing zone. In silver we clean the data, do basic standardisation, naming conventions and test the data for certain expectations. No business logic happens here. And finally in gold, all models are transformed, aggregated and in my case conformed to a star schema. Normally, in a production setting, I'd also add a presentation/mart folder with more wide tables that can be consumed by a BI tool or used for ad hoc analytics or querying. But I didn't have time for that here. Instead in analytics_queries, you can find the queries behind the bare bones Databricks Dashboard I created for the KPIs. 
