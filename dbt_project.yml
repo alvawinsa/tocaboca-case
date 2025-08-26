@@ -38,5 +38,5 @@ models:
       +materialized: table
       +catalog: |
         {%- if target.name == "prod" -%} prod_gold
-        {%- else -%} sandbox
+        {%- else -%} prod_gold
         {%- endif -%}
