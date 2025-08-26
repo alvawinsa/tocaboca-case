@@ -15,6 +15,7 @@ tocaboca/
 │   └── snapshots/                 # No snapshots right now but this is where they'd be
 ├── analytics_queries/             # Ad-hoc / analysis SQL queries for for a Databricks dashboard
 ├── README.md
+```
 
 ### Ingestion
 These are the scripts that first mount, then save the tables from Azure Data Storage to Delta format in Databricks. As mentioned above, wouldn't normally live in the same repo, but added it here for this case since that'd be easier. They are extremely bare bones and not scalable, but a basic script to set things up
