@@ -23,9 +23,10 @@ tocaboca/
 These are the scripts that first mount, then save the tables from Azure Data Storage to Delta format in Databricks. As mentioned above, wouldn't normally live in the same repo, but added it here for this case since that'd be easier. They are extremely bare bones and not scalable, but a basic script to set things up. For example, in a prod setting I'd make them incremental, setup error handling and control these jobs with IaC instead.
 
 ### dbt
-This project follows the Medallion Architecture:
-	•	Bronze → Raw, untransformed data (landing zone).
-	•	Silver → Cleaned, standardized data. Naming conventions, data quality tests. No business logic.
-	•	Gold → Transformed, aggregated models structured as a star schema in my case
+This project follows the **Medallion Architecture**:  
 
-In a production environment, I'd also add a schema for presentation/mart layer where there'd be more wide tables for BI tools to consume or for ad hoc analytics, but for lack of time I added the queries behind my Databricks dashboard into analytics_queries.
+- **Bronze** → Raw, untransformed data (landing zone)  
+- **Silver** → Cleaned, standardized data. Naming conventions, data quality tests. No business logic  
+- **Gold** → Transformed, aggregated models structured as a **star schema**  
+
+In a production environment, I'd also add a schema for presentation/mart layer where there'd be more wide tables for BI tools to consume or for ad hoc analytics, but for lack of time I added the queries behind my Databricks dashboard into `analytics_queries/`.
