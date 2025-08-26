@@ -48,12 +48,17 @@ models:
   - name: fct_events
     description: one row per single event, deduplicated
     columns:
+      - name: event_key
+        description: Unique, synthetic identifier for the event
+        data_type: string
+        data_tests:
+          - not_null
+          - unique
       - name: session_id
         description: Unique, synthetic identifier for the session
         data_type: string
         data_tests:
           - not_null
-          - unique
       - name: event_timestamp_local
         description: Timestamp in CET/CEST Stockholm local time when the event occurred
         data_type: datetime

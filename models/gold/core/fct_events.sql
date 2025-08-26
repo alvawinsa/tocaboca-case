@@ -12,9 +12,10 @@ with events as (select * from {{ ref("stg_events") }}
 
 final as (
     select
-        md5(concat_ws(ga_session_id, device_id, install_id)) as session_id,
+        event_key,
+        md5(concat_ws('||', cast(ga_session_id as string), coalesce(cast(device_id as string), cast(install_id as string)))) as session_id,
         from_utc_timestamp(event_timestamp, 'Europe/Stockholm') as event_timestamp_local,
-        coalesce(device_id, install_id) as device_id,
+        device_id,
         event_name,
         engaged_session_event,
         is_conversion_event,
