@@ -96,6 +96,8 @@ def model(dbt, session):
         .withColumn("has_subscription", (F.col("subscription") == "1").cast("boolean"))
         .withColumn("validated", (F.col("validated") == "1").cast("boolean"))
         .withColumn("product_name", F.lower(F.col("product_name")))
+        # there are probably cleaner ways of doing this, e.g. mapping early events install_id to later
+        # events install_id where device_id is populated */
         .withColumn("device_id", F.coalesce(F.col("device_id_raw"), F.col("install_id")))
         .withColumn(
             "install_source",
