@@ -15,7 +15,7 @@ tocaboca/
 │   │   └── gold/                  # All transformed, aggregated models in star schema
 │   ├── macros/                    # No macros created but this is where they'd live
 │   └── snapshots/                 # No snapshots right now but this is where they'd be
-├── analytics_queries/             # Ad-hoc / analysis SQL queries for for a Databricks dashboard
+├── analytics_queries/             # Ad-hoc queries for for a Databricks dashboard
 ├── README.md
 ```
 
