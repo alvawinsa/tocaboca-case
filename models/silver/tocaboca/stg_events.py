@@ -105,7 +105,7 @@ def model(dbt, session):
             .when(F.col("install_source") == "com.google.android.packageinstaller", "Google Play")
             .when(F.col("install_source") == "iTunes", "Apple App Store")
             .when(F.col("install_source") == "com.amazon.venezia", "Amazon Appstore")
-            .otherwise("not legit")
+            .otherwise("Not Legit")
         )
         .withColumn(
             "event_key",
